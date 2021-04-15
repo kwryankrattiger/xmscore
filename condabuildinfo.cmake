@@ -1,5 +1,5 @@
 set(Boost_USE_STATIC_LIBS TRUE)
 find_package(Boost REQUIRED log_setup log timer thread)
-set(EXT_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-set(EXT_LIB_DIRS ${Boost_LIBRARY_DIRS})
-set(EXT_LIBS ${Boost_LIBRARIES})
+list(APPEND EXT_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+list(APPEND EXT_LIB_DIRS ${Boost_LIBRARY_DIRS})
+list(APPEND EXT_LIBS ${Boost_LIBRARIES};z)
