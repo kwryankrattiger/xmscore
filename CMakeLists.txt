@@ -6,9 +6,9 @@ if (APPLE OR WIN32)
     # Target C++17 on MacOS and Windows. If building with version of Visual Studio without
     # support, has no effect.
     set(CMAKE_CXX_STANDARD 17)
-else()
+else ()
     set(CMAKE_CXX_STANDARD 14)
-endif()
+endif ()
 
 project(xmscore C CXX)
 
@@ -27,9 +27,9 @@ set(XMS_VERSION "5.2.0" CACHE STRING "Library Version")
 
 if (APPLE)
   set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
-else()
+else ()
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif()
+endif ()
 
 if (BUILD_SHARED_LIBS AND NOT CMAKE_POSITION_INDEPENDENT_CODE)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -42,23 +42,23 @@ endif ()
 
 add_definitions(-DXMS_VERSION=\"${XMS_VERSION}\")
 
-if(WIN32)
-    if(XMS_BUILD)
+if (WIN32)
+    if (XMS_BUILD)
         add_definitions(/D _WIN32_WINNT=0x0501)  # Windows XP and higher
         add_definitions(/Zc:wchar_t-)  # Treat wchar_t as built-in type
-    else(NOT XMS_BUILD)
+    else (NOT XMS_BUILD)
         add_definitions(/D BOOST_ALL_NO_LIB)
-    endif()
-endif()
+    endif ()
+endif ()
 
-if(XMS_BUILD_MODE STREQUAL "CONAN")
+if (XMS_BUILD_MODE STREQUAL "CONAN")
   # Conan setup
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
   set(EXT_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS})
   set(EXT_LIB_DIRS ${CONAN_LIB_DIRS})
   set(EXT_LIBS ${CONAN_LIBS})
-elseif(XMS_BUILD_MODE STREQUAL "CMAKE")
+elseif (XMS_BUILD_MODE STREQUAL "CMAKE")
   if (BUILD_SHARED_LIBS)
     set(Boost_USE_STATIC_LIBS OFF)
   else ()
@@ -69,29 +69,29 @@ elseif(XMS_BUILD_MODE STREQUAL "CMAKE")
   list(APPEND EXT_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
   list(APPEND EXT_LIB_DIRS ${Boost_LIBRARY_DIRS})
   list(APPEND EXT_LIBS ${Boost_LIBRARIES};z)
-else() # If we are not using conda, we are using conan
+else () # If we are not using conda, we are using conan
   include(${CMAKE_CURRENT_LIST_DIR}/condabuildinfo.cmake)
-endif()
+endif ()
 
-if(WIN32)
+if (WIN32)
   string(COMPARE EQUAL "${CONAN_SETTINGS_COMPILER_RUNTIME}" "MT" USES_MT)
-  if(NOT USES_MT)
+  if (NOT USES_MT)
     string(COMPARE EQUAL "${CONAN_SETTINGS_COMPILER_RUNTIME}" "MTd" USES_MT)
-  endif()
+  endif ()
 
-  if(USES_MT)
+  if (USES_MT)
     add_definitions(/Zc:wchar_t)  # Treat wchar_t as built-in type
-  else()
+  else ()
     add_definitions(/Zc:wchar_t-)  # Treat wchar_t as built-in type
-  endif()
+  endif ()
 
-  if(XMS_BUILD)
+  if (XMS_BUILD)
       add_definitions(/D _WIN32_WINNT=0x0501)  # Windows XP and higher
-  else(NOT XMS_BUILD)
+  else (NOT XMS_BUILD)
       add_definitions(/D BOOST_ALL_NO_LIB)
-  endif()
+  endif ()
 
-  if(USES_MT)
+  if (USES_MT)
     set(CompilerFlags
         CMAKE_CXX_FLAGS
         CMAKE_CXX_FLAGS_DEBUG
@@ -103,39 +103,44 @@ if(WIN32)
     foreach(CompilerFlag ${CompilerFlags})
       string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
     endforeach()
-  endif()
-endif()
+  endif ()
+endif ()
 
-if(ENABLE_PYTHON)
+if (ENABLE_PYTHON)
 
   # Pybind11 module
-  if(XMS_BUILD_MODE STREQUAL "CONDA")
-      include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Targets.cmake")
-      include("${CONDA_PREFIX}/share/cmake/pybind11/FindPythonLibsNew.cmake")
-      include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Config.cmake")
-      include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11ConfigVersion.cmake")
-      include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Tools.cmake")
-  elseif(XMS_BUILD_MODE STREQUAL "CONAN")
-      include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Targets.cmake")
-      include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/FindPythonLibsNew.cmake")
-      include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Config.cmake")
-      include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11ConfigVersion.cmake")
-      include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Tools.cmake")
-  else()
+  if (NOT XMS_BUILD_MODE STREQUAL "CMAKE")
+      if (XMS_BUILD_MODE STREQUAL "CONDA")
+          include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Targets.cmake")
+          include("${CONDA_PREFIX}/share/cmake/pybind11/FindPythonLibsNew.cmake")
+          include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Config.cmake")
+          include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11ConfigVersion.cmake")
+          include("${CONDA_PREFIX}/share/cmake/pybind11/pybind11Tools.cmake")
+      elseif (XMS_BUILD_MODE STREQUAL "CONAN")
+          include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Targets.cmake")
+          include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/FindPythonLibsNew.cmake")
+          include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Config.cmake")
+          include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11ConfigVersion.cmake")
+          include("${CONAN_PYBIND11_ROOT}/share/cmake/pybind11/pybind11Tools.cmake")
+      endif ()
+
+      find_package(PythonLibsNew ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
+  else ()
+      # New method does not require PythonLibsNew
+      find_package(Python REQUIRED COMPONENTS Interpreter)
+      set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
       find_package(pybind11 CONFIG REQUIRED)
-  endif()
+  endif ()
 
   list(APPEND EXT_INCLUDE_DIRS
     ${pybind11_INCLUDE_DIR}
   )
 
-  find_package(PythonLibsNew ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
-
   # Have to add this after conda because it doesn't get the path for pybind if we don't.
   list(APPEND EXT_INCLUDE_DIRS
     ${PYTHON_INCLUDE_DIRS}
   )
-endif()
+endif ()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 include_directories(${EXT_INCLUDE_DIRS})
@@ -187,7 +192,7 @@ set(xmscore_headers
 )
 
 # Tests
-if(BUILD_TESTING)
+if (BUILD_TESTING)
     add_definitions(-DXMS_TEST_PATH="${XMS_TEST_PATH}/")
     add_definitions(-DCXX_TEST -DCXXTEST4)
 
@@ -209,7 +214,7 @@ if(BUILD_TESTING)
     )
 
     find_package(CxxTest)
-    if(CXXTEST_FOUND)
+    if (CXXTEST_FOUND)
       include_directories(${CXXTEST_INCLUDE_DIRS})
       enable_testing()
 
@@ -220,22 +225,22 @@ if(BUILD_TESTING)
       )
       target_link_libraries(runner ${PROJECT_NAME})
 
-      if(WIN32)
+      if (WIN32)
         set(RUNNERNAME "runner.exe")
-      else()
+      else ()
         set(RUNNERNAME "runner")
-      endif()
-    endif()
-endif()
+      endif ()
+    endif ()
+endif ()
 
-if(ENABLE_PYTHON)
+if (ENABLE_PYTHON)
   list(APPEND xmscore_sources
     xmscore/python/misc/PyUtils.cpp
   )
   list(APPEND xmscore_headers
     xmscore/python/misc/PyUtils.h
   )
-endif()
+endif ()
 
 add_library(${PROJECT_NAME}
   ${xmscore_sources} ${xmscore_headers}
@@ -247,13 +252,13 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${CMAKE_THREAD_LIBS_INIT}
 )
-if(UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} rt)
-endif()
+endif ()
 set_property(TARGET ${PROJECT_NAME} PROPERTY EXPORT_NAME Core)
 
 #Pybind11
-if(ENABLE_PYTHON)
+if (ENABLE_PYTHON)
 
   # Pybind11 sources
   set(xmscore_py
@@ -312,7 +317,7 @@ if(ENABLE_PYTHON)
     PATTERN "_package/tests" EXCLUDE
     ${XMS_PYTHON_INSTALL_PACKAGE_EXTRA})
 
-endif()
+endif ()
 
 # Install recipe
 install(
