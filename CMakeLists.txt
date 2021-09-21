@@ -126,21 +126,24 @@ if (ENABLE_PYTHON)
       endif ()
 
       find_package(PythonLibsNew ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
+      list(APPEND EXT_INCLUDE_DIRS
+        ${pybind11_INCLUDE_DIR}
+      )
+      # Have to add this after conda because it doesn't get the path for pybind if we don't.
+      list(APPEND EXT_INCLUDE_DIRS
+        ${PYTHON_INCLUDE_DIRS}
+      )
   else ()
       # New method does not require PythonLibsNew
-      find_package(Python REQUIRED COMPONENTS Interpreter)
-      set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
+      if (PYTHON_TARGET_VERSION VERSION_GREATER_EQUAL "3.0")
+        find_package(Python3 REQUIRED COMPONENTS Interpreter)
+      else ()
+        find_package(Python REQUIRED COMPONENTS Interpreter)
+      endif ()
       find_package(pybind11 CONFIG REQUIRED)
+      list(APPEND EXT_LIBS pybind11::pybind11)
   endif ()
 
-  list(APPEND EXT_INCLUDE_DIRS
-    ${pybind11_INCLUDE_DIR}
-  )
-
-  # Have to add this after conda because it doesn't get the path for pybind if we don't.
-  list(APPEND EXT_INCLUDE_DIRS
-    ${PYTHON_INCLUDE_DIRS}
-  )
 endif ()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
