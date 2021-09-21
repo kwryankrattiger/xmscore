@@ -65,10 +65,11 @@ elseif (XMS_BUILD_MODE STREQUAL "CMAKE")
     set(Boost_USE_STATIC_LIBS ON)
   endif ()
   find_package(Boost QUIET REQUIRED log_setup log system filesystem serialization timer)
+  find_package(ZLIB QUIET REQUIRED)
 
   list(APPEND EXT_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
   list(APPEND EXT_LIB_DIRS ${Boost_LIBRARY_DIRS})
-  list(APPEND EXT_LIBS ${Boost_LIBRARIES};z)
+  list(APPEND EXT_LIBS ${Boost_LIBRARIES};${ZLIB_LIBRARIES})
 else () # If we are not using conda, we are using conan
   include(${CMAKE_CURRENT_LIST_DIR}/condabuildinfo.cmake)
 endif ()
