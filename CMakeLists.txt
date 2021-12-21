@@ -25,6 +25,11 @@ set(PYTHON_TARGET_VERSION 3.6 CACHE STRING "Version of python to link to for pyt
 set(XMS_TEST_PATH ${PROJECT_SOURCE_DIR}/test_files/ CACHE PATH "Path to test files for testing")
 set(XMS_VERSION "5.2.0" CACHE STRING "Library Version")
 
+# Do this because it doesn't work otherwise...
+if (BUILD_SHARED_LIBS AND WIN32)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 if (APPLE)
   set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
 else ()
