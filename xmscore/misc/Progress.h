@@ -9,6 +9,7 @@
 //----- Included files ---------------------------------------------------------
 #include <string>
 
+#include <xmscore/xmscore_export.h>
 #include <xmscore/misc/boost_defines.h>
 
 //----- Forward declarations ---------------------------------------------------
@@ -20,7 +21,7 @@
 //----- Structs / Classes ------------------------------------------------------
 namespace xms
 {
-class Progress
+class XMSCORE_EXPORT Progress
 {
 public:
   Progress(const std::string& a_message);
@@ -40,7 +41,7 @@ private:
 
 /// \class ProgressListener
 /// \brief Listen to progress reported from Progress class
-class ProgressListener
+class XMSCORE_EXPORT ProgressListener
 {
 public:
   virtual ~ProgressListener();

@@ -11,6 +11,7 @@
 #include <vector>
 
 // 4. External Library Headers
+#include <xmscore/xmscore_export.h>
 #include <boost/dynamic_bitset.hpp>
 
 // 5. Shared Headers
@@ -23,7 +24,7 @@ namespace xms
 {
 typedef boost::dynamic_bitset<size_t> DynBitset; ///< vector of flags
 
-void VecBooleanToDynBitset(const std::vector<unsigned char>& a_from, DynBitset& a_to);
-void DynBitsetToVecBoolean(const DynBitset& a_from, std::vector<unsigned char>& a_to);
+XMSCORE_EXPORT void VecBooleanToDynBitset(const std::vector<unsigned char>& a_from, DynBitset& a_to);
+XMSCORE_EXPORT void DynBitsetToVecBoolean(const DynBitset& a_from, std::vector<unsigned char>& a_to);
 
 } // namespace xms

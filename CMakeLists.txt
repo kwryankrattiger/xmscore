@@ -13,6 +13,7 @@ endif ()
 project(xmscore C CXX)
 
 include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 set(BUILD_TESTING OFF CACHE BOOL "Enable/Disable testing")
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Enable/Disable building shared libraries")
@@ -26,9 +27,9 @@ set(XMS_TEST_PATH ${PROJECT_SOURCE_DIR}/test_files/ CACHE PATH "Path to test fil
 set(XMS_VERSION "5.2.0" CACHE STRING "Library Version")
 
 # Do this because it doesn't work otherwise...
-if (BUILD_SHARED_LIBS AND WIN32)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif ()
+#if (BUILD_SHARED_LIBS AND WIN32)
+  #set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+#endif ()
 
 if (APPLE)
   set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
@@ -258,6 +259,15 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${CMAKE_THREAD_LIBS_INIT}
 )
+generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME xmscore/xmscore_export.h)
+target_include_directories(xmscore
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+install(FILES ${PROJECT_BINARY_DIR}/xmscore/xmscore_export.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xmscore
+  )
+
 if (UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} rt)
 endif ()
@@ -300,6 +310,16 @@ if (ENABLE_PYTHON)
   set_target_properties(_xmscore PROPERTIES
     LINKER_LANGUAGE CXX
   )
+  generate_export_header(_xmscore
+    BASE_NAME xmscorepy
+    EXPORT_FILE_NAME xmscore/python/xmscorepy_export.h)
+  target_include_directories(xmscore
+    PUBLIC
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  install(FILES ${PROJECT_BINARY_DIR}/xmscore/python/xmscorepy_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xmscore/python
+    )
 
   # Install recipe
   if (XMS_BUILD_MODE STREQUAL "CMAKE")

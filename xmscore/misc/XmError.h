@@ -17,6 +17,7 @@
 #include <boost/preprocessor/facilities/empty.hpp>
 
 // 5. Shared Headers
+#include <xmscore/xmscore_export.h>
 #include <xmscore/misc/XmLog.h>
 
 // 6. Non-shared Headers
@@ -25,8 +26,8 @@
 
 namespace xms
 {
-bool& xmAsserting();
-extern int XM0, XM1; // replacements for 0 and 1 which do not cause warning C4127: conditional
+XMSCORE_EXPORT bool& xmAsserting();
+XMSCORE_EXPORT extern int XM0, XM1; // replacements for 0 and 1 which do not cause warning C4127: conditional
                      // expression is constant
 
 ////////////////////////////////////////////////////////////////////////////////

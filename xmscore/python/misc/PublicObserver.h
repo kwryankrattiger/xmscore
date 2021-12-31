@@ -16,6 +16,7 @@
 #include <xmscore/misc/Observer.h>
 
 // 5. Shared Headers
+#include <xmscore/python/xmscorepy_export.h>
 
 // 6. Non-shared Headers
 
@@ -23,7 +24,7 @@
 namespace xms
 {
 
-class PublicObserver : public xms::Observer
+class XMSCOREPY_EXPORT PublicObserver : public xms::Observer
 {
 public:
   /* Inherit the constructors */
