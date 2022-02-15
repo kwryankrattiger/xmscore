@@ -259,6 +259,11 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${CMAKE_THREAD_LIBS_INIT}
 )
+if (ENABLE_PYTHON)
+  # Don't fail to link if there are missing symbols
+  target_link_options(${PROJECT_NAME}
+    PUBLIC "$<$<PLATFORM_ID:Darwin>:-undefined;dynamic_lookup>")
+endif ()
 generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME xmscore/xmscore_export.h)
 target_include_directories(xmscore
   PUBLIC
