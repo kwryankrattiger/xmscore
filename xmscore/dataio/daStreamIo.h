@@ -72,7 +72,7 @@ public:
 
 private:
   XM_DISALLOW_COPY_AND_ASSIGN(DaStreamReader)
-  class Impl;
+  class XMSCORE_EXPORT Impl;
   std::unique_ptr<Impl> m_impl; ///< Implementation.
 };
 

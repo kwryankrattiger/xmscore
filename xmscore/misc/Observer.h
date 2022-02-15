@@ -47,7 +47,7 @@ private:
   virtual void TimeRemainingInSeconds(double a_remainingSeconds);
   virtual void TimeElapsedInSeconds(double a_elapsedSeconds);
 
-  class impl;
+  class XMSCORE_EXPORT impl;
   BSHP<impl> m_p; ///< implementation class
 };                // class Observer
 

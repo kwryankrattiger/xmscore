@@ -130,7 +130,7 @@ public:
 private:
   /// Constructor hidden and not implemented
   XmLog();
-  struct Impl;
+  struct XMSCORE_EXPORT Impl;
   /// Implementation pointer
   boost::scoped_ptr<Impl> m;
 }; // class XmLog
