@@ -65,7 +65,7 @@ public:
   //----------------------------------------------------------------------------
   /// \brief Delete the singleton instance.
   //----------------------------------------------------------------------------
-  static void Delete() { Instance(true, boost::shared_ptr<T>()); }
+  static void Delete() { Instance(true); }
 }; // class Singleton
 ////////////////////////////////////////////////////////////////////////////////
 /// \class SharedSingleton

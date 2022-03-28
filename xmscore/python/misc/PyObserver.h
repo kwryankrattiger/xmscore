@@ -19,11 +19,12 @@
 #include <pybind11/pybind11.h>
 
 // 5. Shared Headers
+#include <xmscore/python/xmscorepy_export.h>
 
 // 6. Non-shared Headers
 
 //----- Namespace declaration --------------------------------------------------
-class PyObserver: public xms::PublicObserver
+class XMSCOREPY_EXPORT PyObserver: public xms::PublicObserver
 {
 public:
  /* Inherit the constructors */

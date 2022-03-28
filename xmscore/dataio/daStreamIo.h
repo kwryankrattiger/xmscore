@@ -13,6 +13,7 @@
 // 4. External Library Headers
 
 // 5. Shared Headers
+#include <xmscore/xmscore_export.h>
 #include <xmscore/misc/base_macros.h>
 #include <xmscore/misc/boost_defines.h>
 #include <xmscore/stl/vector.h>
@@ -32,7 +33,7 @@ namespace xms
 //----- Structs / Classes ------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////
-class DaStreamReader
+class XMSCORE_EXPORT DaStreamReader
 {
 public:
   explicit DaStreamReader(std::istream& a_inStream, bool a_binaryArrays = false);
@@ -71,12 +72,12 @@ public:
 
 private:
   XM_DISALLOW_COPY_AND_ASSIGN(DaStreamReader)
-  class Impl;
+  class XMSCORE_EXPORT Impl;
   std::unique_ptr<Impl> m_impl; ///< Implementation.
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class DaStreamWriter
+class XMSCORE_EXPORT DaStreamWriter
 {
 public:
   explicit DaStreamWriter(std::ostream& a_outStream, bool a_binaryArrays = false);
@@ -120,55 +121,55 @@ private:
 
 //----- Function prototypes ----------------------------------------------------
 
-bool daReadNamedLine(std::istream& a_inStream, const char* a_name);
-bool daReadLine(std::istream& a_inStream, std::string& a_line);
-bool daReadIntLine(std::istream& a_inStream, const char* a_name, int& a_val);
-bool daReadDoubleLine(std::istream& a_inStream, const char* a_name, double& a_val);
-bool daReadStringLine(std::istream& a_inStream, const char* a_name, std::string& a_val);
-bool daReadVecInt(std::istream& a_inStream, const char* a_name, VecInt& a_vec);
-bool daReadVecDbl(std::istream& a_inStream, const char* a_name, VecDbl& a_vec);
-bool daReadVecPt3d(std::istream& a_inStream, const char* a_name, VecPt3d& a_vec);
-bool daRead2StringLine(std::istream& a_inStream,
+XMSCORE_EXPORT bool daReadNamedLine(std::istream& a_inStream, const char* a_name);
+XMSCORE_EXPORT bool daReadLine(std::istream& a_inStream, std::string& a_line);
+XMSCORE_EXPORT bool daReadIntLine(std::istream& a_inStream, const char* a_name, int& a_val);
+XMSCORE_EXPORT bool daReadDoubleLine(std::istream& a_inStream, const char* a_name, double& a_val);
+XMSCORE_EXPORT bool daReadStringLine(std::istream& a_inStream, const char* a_name, std::string& a_val);
+XMSCORE_EXPORT bool daReadVecInt(std::istream& a_inStream, const char* a_name, VecInt& a_vec);
+XMSCORE_EXPORT bool daReadVecDbl(std::istream& a_inStream, const char* a_name, VecDbl& a_vec);
+XMSCORE_EXPORT bool daReadVecPt3d(std::istream& a_inStream, const char* a_name, VecPt3d& a_vec);
+XMSCORE_EXPORT bool daRead2StringLine(std::istream& a_inStream,
                        const char* a_name,
                        std::string& a_val1,
                        std::string& a_val2);
-bool daRead3StringLine(std::istream& a_inStream,
+XMSCORE_EXPORT bool daRead3StringLine(std::istream& a_inStream,
                        const char* a_name,
                        std::string& a_val1,
                        std::string& a_val2,
                        std::string& a_val3);
-bool daRead3DoubleLine(std::istream& a_inStream,
+XMSCORE_EXPORT bool daRead3DoubleLine(std::istream& a_inStream,
                        const char* a_name,
                        double& a_val1,
                        double& a_val2,
                        double& a_val3);
 
-bool daReadIntFromLine(std::string& a_line, int& a_val);
-bool daReadStringFromLine(std::string& a_line, std::string& a_val);
-bool daReadDoubleFromLine(std::string& a_line, double& a_val);
+XMSCORE_EXPORT bool daReadIntFromLine(std::string& a_line, int& a_val);
+XMSCORE_EXPORT bool daReadStringFromLine(std::string& a_line, std::string& a_val);
+XMSCORE_EXPORT bool daReadDoubleFromLine(std::string& a_line, double& a_val);
 
-bool daLineBeginsWith(std::istream& a_inStream, const std::string& a_text);
+XMSCORE_EXPORT bool daLineBeginsWith(std::istream& a_inStream, const std::string& a_text);
 
-void daWriteVecInt(std::ostream& a_outStream, const char* a_name, const VecInt& a_vec);
-void daWriteVecDbl(std::ostream& a_outStream, const char* a_name, const VecDbl& a_vec);
-void daWriteVecPt3d(std::ostream& a_outStream, const char* a_name, const VecPt3d& a_points);
+XMSCORE_EXPORT void daWriteVecInt(std::ostream& a_outStream, const char* a_name, const VecInt& a_vec);
+XMSCORE_EXPORT void daWriteVecDbl(std::ostream& a_outStream, const char* a_name, const VecDbl& a_vec);
+XMSCORE_EXPORT void daWriteVecPt3d(std::ostream& a_outStream, const char* a_name, const VecPt3d& a_points);
 
-void daWriteIntLine(std::ostream& a_outStream, const char* a_name, int a_val);
+XMSCORE_EXPORT void daWriteIntLine(std::ostream& a_outStream, const char* a_name, int a_val);
 
-void daWriteDoubleLine(std::ostream& a_outStream, const char* a_name, double a_val);
-void daWrite3DoubleLine(std::ostream& a_outStream,
+XMSCORE_EXPORT void daWriteDoubleLine(std::ostream& a_outStream, const char* a_name, double a_val);
+XMSCORE_EXPORT void daWrite3DoubleLine(std::ostream& a_outStream,
                         const char* a_name,
                         const double& a_val1,
                         const double& a_val2,
                         const double& a_val3);
 
-void daWriteLine(std::ostream& a_outStream, const std::string& a_line);
-void daWriteStringLine(std::ostream& a_outStream, const char* a_name, const std::string& a_val);
-void daWrite2StringLine(std::ostream& a_outStream,
+XMSCORE_EXPORT void daWriteLine(std::ostream& a_outStream, const std::string& a_line);
+XMSCORE_EXPORT void daWriteStringLine(std::ostream& a_outStream, const char* a_name, const std::string& a_val);
+XMSCORE_EXPORT void daWrite2StringLine(std::ostream& a_outStream,
                         const char* a_name,
                         const std::string& a_val1,
                         const std::string& a_val2);
-void daWrite3StringLine(std::ostream& a_outStream,
+XMSCORE_EXPORT void daWrite3StringLine(std::ostream& a_outStream,
                         const char* a_name,
                         const std::string& a_val1,
                         const std::string& a_val2,

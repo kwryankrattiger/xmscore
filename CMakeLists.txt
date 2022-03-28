@@ -13,17 +13,23 @@ endif ()
 project(xmscore C CXX)
 
 include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 set(BUILD_TESTING OFF CACHE BOOL "Enable/Disable testing")
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Enable/Disable building shared libraries")
 set(XMS_BUILD_MODE "CONAN" CACHE STRING "Target packing system to build for.")
 set_property(CACHE XMS_BUILD_MODE PROPERTY STRINGS "CONAN;CONDA;CMAKE")
 set(CONDA_PREFIX "" CACHE PATH "Path to the conda environment used to build.")
-set(XMS_BUILD NO CACHE BOOL "Set this if you want to use this package with XMS.")
-set(ENABLE_PYTHON NO CACHE BOOL "Set this if you want to build the python bindings.")
+set(XMS_BUILD ON CACHE BOOL "Set this if you want to use this package with XMS.")
+set(ENABLE_PYTHON OFF CACHE BOOL "Set this if you want to build the python bindings.")
 set(PYTHON_TARGET_VERSION 3.6 CACHE STRING "Version of python to link to for python wrapping.")
 set(XMS_TEST_PATH ${PROJECT_SOURCE_DIR}/test_files/ CACHE PATH "Path to test files for testing")
 set(XMS_VERSION "5.2.0" CACHE STRING "Library Version")
+
+# Do this because it doesn't work otherwise...
+#if (BUILD_SHARED_LIBS AND WIN32)
+  #set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+#endif ()
 
 if (APPLE)
   set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
@@ -43,12 +49,11 @@ endif ()
 add_definitions(-DXMS_VERSION=\"${XMS_VERSION}\")
 
 if (WIN32)
-    if (XMS_BUILD)
-        add_definitions(/D _WIN32_WINNT=0x0501)  # Windows XP and higher
-        add_definitions(/Zc:wchar_t-)  # Treat wchar_t as built-in type
-    else (NOT XMS_BUILD)
-        add_definitions(/D BOOST_ALL_NO_LIB)
-    endif ()
+  if (XMS_BUILD)
+    add_definitions(/D _WIN32_WINNT=0x0501)  # Windows XP and higher
+    add_definitions(/Zc:wchar_t-)  # Treat wchar_t as built-in type
+  endif ()
+  add_definitions(/D BOOST_ALL_NO_LIB)
 endif ()
 
 if (XMS_BUILD_MODE STREQUAL "CONAN")
@@ -59,21 +64,25 @@ if (XMS_BUILD_MODE STREQUAL "CONAN")
   set(EXT_LIB_DIRS ${CONAN_LIB_DIRS})
   set(EXT_LIBS ${CONAN_LIBS})
 elseif (XMS_BUILD_MODE STREQUAL "CMAKE")
+  if (PYTHON_TARGET_VERSION VERSION_LESS "3.0.0")
+    message(FATAL_ERROR "XMS requires Python >= 3.0 (${PYTHON_TARGET_VERSION})")
+  endif ()
   if (BUILD_SHARED_LIBS)
     set(Boost_USE_STATIC_LIBS OFF)
   else ()
     set(Boost_USE_STATIC_LIBS ON)
   endif ()
   find_package(Boost QUIET REQUIRED log_setup log system filesystem serialization timer)
+  find_package(ZLIB QUIET REQUIRED)
 
   list(APPEND EXT_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
   list(APPEND EXT_LIB_DIRS ${Boost_LIBRARY_DIRS})
-  list(APPEND EXT_LIBS ${Boost_LIBRARIES};z)
+  list(APPEND EXT_LIBS Boost::system Boost::timer Boost::filesystem Boost::serialization Boost::log_setup Boost::log ZLIB::ZLIB)
 else () # If we are not using conda, we are using conan
   include(${CMAKE_CURRENT_LIST_DIR}/condabuildinfo.cmake)
 endif ()
 
-if (WIN32)
+if (WIN32 AND XMS_BUILD_MODE STREQUAL "CONAN")
   string(COMPARE EQUAL "${CONAN_SETTINGS_COMPILER_RUNTIME}" "MT" USES_MT)
   if (NOT USES_MT)
     string(COMPARE EQUAL "${CONAN_SETTINGS_COMPILER_RUNTIME}" "MTd" USES_MT)
@@ -125,21 +134,19 @@ if (ENABLE_PYTHON)
       endif ()
 
       find_package(PythonLibsNew ${PYTHON_TARGET_VERSION} EXACT REQUIRED)
+      list(APPEND EXT_INCLUDE_DIRS
+        ${pybind11_INCLUDE_DIR}
+      )
+      # Have to add this after conda because it doesn't get the path for pybind if we don't.
+      list(APPEND EXT_INCLUDE_DIRS
+        ${PYTHON_INCLUDE_DIRS}
+      )
   else ()
       # New method does not require PythonLibsNew
-      find_package(Python REQUIRED COMPONENTS Interpreter)
-      set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
+      find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
       find_package(pybind11 CONFIG REQUIRED)
+      list(APPEND EXT_LIBS pybind11::pybind11 Python3::Python)
   endif ()
-
-  list(APPEND EXT_INCLUDE_DIRS
-    ${pybind11_INCLUDE_DIR}
-  )
-
-  # Have to add this after conda because it doesn't get the path for pybind if we don't.
-  list(APPEND EXT_INCLUDE_DIRS
-    ${PYTHON_INCLUDE_DIRS}
-  )
 endif ()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
@@ -252,6 +259,20 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${CMAKE_THREAD_LIBS_INIT}
 )
+if (ENABLE_PYTHON)
+  # Don't fail to link if there are missing symbols
+  target_link_options(${PROJECT_NAME}
+    PUBLIC "$<$<PLATFORM_ID:Darwin>:-undefined;dynamic_lookup>")
+endif ()
+generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME xmscore/xmscore_export.h)
+target_include_directories(xmscore
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+install(FILES ${PROJECT_BINARY_DIR}/xmscore/xmscore_export.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xmscore
+  )
+
 if (UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} rt)
 endif ()
@@ -265,13 +286,11 @@ if (ENABLE_PYTHON)
     xmscore/python/xmscore_py.cpp
     # Misc
     xmscore/python/misc/misc_py.cpp
-    xmscore/python/misc/PyUtils.cpp
     xmscore/python/misc/observer_py.cpp
   )
 
   set(xmscore_py_headers
     xmscore/python/misc/misc_py.h
-    xmscore/python/misc/PyUtils.h
     xmscore/python/misc/PublicObserver.h
     xmscore/python/misc/PyObserver.h
   )
@@ -294,6 +313,16 @@ if (ENABLE_PYTHON)
   set_target_properties(_xmscore PROPERTIES
     LINKER_LANGUAGE CXX
   )
+  generate_export_header(_xmscore
+    BASE_NAME xmscorepy
+    EXPORT_FILE_NAME xmscore/python/xmscorepy_export.h)
+  target_include_directories(xmscore
+    PUBLIC
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  install(FILES ${PROJECT_BINARY_DIR}/xmscore/python/xmscorepy_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xmscore/python
+    )
 
   # Install recipe
   if (XMS_BUILD_MODE STREQUAL "CMAKE")

@@ -21,6 +21,7 @@
 // 4. External Library Headers
 
 // 5. Shared Headers
+#include <xmscore/xmscore_export.h>
 #include <xmscore/stl/vector.h>
 
 // 6. Non-shared Headers
@@ -41,7 +42,7 @@ enum PrecFlags {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class StTemp2DigitExponents
+class XMSCORE_EXPORT StTemp2DigitExponents
 {
 public:
   StTemp2DigitExponents();
@@ -55,62 +56,62 @@ static const char* ST_WHITESPACE = " \t\n\f\r\v"; ///< Whitespace characters
 
 // Convenience functions
 
-bool stEqualNoCase(const std::string&, const std::string&);
-bool stFindNoCase(const std::string&, const std::string&);
+XMSCORE_EXPORT bool stEqualNoCase(const std::string&, const std::string&);
+XMSCORE_EXPORT bool stFindNoCase(const std::string&, const std::string&);
 
-VecStr stSplit(const std::string& source,
+XMSCORE_EXPORT VecStr stSplit(const std::string& source,
                const std::string& a_delimiterList = ST_WHITESPACE,
                bool a_delimiterCompressOn = true);
-VecStr stExplode(const std::string& source, const std::string& a_delimiterString);
-std::string stImplode(const std::vector<std::string>& source, const std::string& delim);
-int stIndexOfElem(const VecStr& a_container, const std::string& str);
+XMSCORE_EXPORT VecStr stExplode(const std::string& source, const std::string& a_delimiterString);
+XMSCORE_EXPORT std::string stImplode(const std::vector<std::string>& source, const std::string& delim);
+XMSCORE_EXPORT int stIndexOfElem(const VecStr& a_container, const std::string& str);
 
-std::string& stLeft(std::string& a_source, size_t const a_length);
-std::string stLeftCopy(const std::string& a_source, size_t const a_length);
+XMSCORE_EXPORT std::string& stLeft(std::string& a_source, size_t const a_length);
+XMSCORE_EXPORT std::string stLeftCopy(const std::string& a_source, size_t const a_length);
 
-std::string& stRemove(std::string& str, char source);
-std::string stRemoveCopy(const std::string& str, char source);
+XMSCORE_EXPORT std::string& stRemove(std::string& str, char source);
+XMSCORE_EXPORT std::string stRemoveCopy(const std::string& str, char source);
 
-std::string& stReplace(std::string& str, char source, char dest);
-std::string& stReplace(std::string& str, const std::string& source, const std::string& dest);
-std::string stReplaceCopy(const std::string& str, char source, char dest);
-std::string stReplaceCopy(const std::string& str,
+XMSCORE_EXPORT std::string& stReplace(std::string& str, char source, char dest);
+XMSCORE_EXPORT std::string& stReplace(std::string& str, const std::string& source, const std::string& dest);
+XMSCORE_EXPORT std::string stReplaceCopy(const std::string& str, char source, char dest);
+XMSCORE_EXPORT std::string stReplaceCopy(const std::string& str,
                           const std::string& source,
                           const std::string& dest);
 
-std::string& stRight(std::string& a_source, size_t const a_length);
-std::string stRightCopy(const std::string& a_source, size_t const a_length);
+XMSCORE_EXPORT std::string& stRight(std::string& a_source, size_t const a_length);
+XMSCORE_EXPORT std::string stRightCopy(const std::string& a_source, size_t const a_length);
 
-std::string stSimplified(const std::string& str);
-bool stContains(const std::string& a_container, const std::string& a_substr);
-bool stVectorContainsString(const VecStr& a_container, const std::string& str);
+XMSCORE_EXPORT std::string stSimplified(const std::string& str);
+XMSCORE_EXPORT bool stContains(const std::string& a_container, const std::string& a_substr);
+XMSCORE_EXPORT bool stVectorContainsString(const VecStr& a_container, const std::string& str);
 
-std::string& stToLower(std::string& str);
-std::string stToLowerCopy(const std::string& str);
-std::string& stToUpper(std::string& str);
-std::string stToUpperCopy(const std::string& str);
+XMSCORE_EXPORT std::string& stToLower(std::string& str);
+XMSCORE_EXPORT std::string stToLowerCopy(const std::string& str);
+XMSCORE_EXPORT std::string& stToUpper(std::string& str);
+XMSCORE_EXPORT std::string stToUpperCopy(const std::string& str);
 
-std::string& stTrim(std::string& str, const std::string& delim = ST_WHITESPACE);
-std::string stTrimCopy(const std::string& str, const std::string& delim = ST_WHITESPACE);
-std::string& stTrimLeft(std::string& str, const std::string& delim = ST_WHITESPACE);
-std::string& stTrimRight(std::string& str, const std::string& delim = ST_WHITESPACE);
+XMSCORE_EXPORT std::string& stTrim(std::string& str, const std::string& delim = ST_WHITESPACE);
+XMSCORE_EXPORT std::string stTrimCopy(const std::string& str, const std::string& delim = ST_WHITESPACE);
+XMSCORE_EXPORT std::string& stTrimLeft(std::string& str, const std::string& delim = ST_WHITESPACE);
+XMSCORE_EXPORT std::string& stTrimRight(std::string& str, const std::string& delim = ST_WHITESPACE);
 
 // Misc
 
-unsigned int stCountChar(const std::string& str, char c);
-bool stNumeric(const std::string& str);
-bool stScientificNotation(const std::string& str, bool check_numeric = true);
-void stChangeExtendedAscii(std::string& str, bool to_extended);
-bool stMakeUnique(const std::set<std::string>& set_str, std::string& str);
-bool stStringToInt(const std::string&, int& i, int base = 0);
-bool stStringToDouble(const std::string&, double& d);
+XMSCORE_EXPORT unsigned int stCountChar(const std::string& str, char c);
+XMSCORE_EXPORT bool stNumeric(const std::string& str);
+XMSCORE_EXPORT bool stScientificNotation(const std::string& str, bool check_numeric = true);
+XMSCORE_EXPORT void stChangeExtendedAscii(std::string& str, bool to_extended);
+XMSCORE_EXPORT bool stMakeUnique(const std::set<std::string>& set_str, std::string& str);
+XMSCORE_EXPORT bool stStringToInt(const std::string&, int& i, int base = 0);
+XMSCORE_EXPORT bool stStringToDouble(const std::string&, double& d);
 
-int stPrecision(double value, int& flags, int length = 15);
+XMSCORE_EXPORT int stPrecision(double value, int& flags, int length = 15);
 
 // Number to string
 
-std::string STRstd(double a_value, int a_n = -1, int width = 15, int flags = 0);
-std::string STRstd(float a_value, int a_n = -1, int width = 15, int flags = 0);
+XMSCORE_EXPORT std::string STRstd(double a_value, int a_n = -1, int width = 15, int flags = 0);
+XMSCORE_EXPORT std::string STRstd(float a_value, int a_n = -1, int width = 15, int flags = 0);
 
 //----- OVERLOAD ---------------------------------------------------------------
 /// brief Formats an integral type (int, unsigned int, etc ) as a std::string.

@@ -9,6 +9,7 @@
 //----- Included files ---------------------------------------------------------
 #include <string>
 
+#include <xmscore/xmscore_export.h>
 #include <xmscore/misc/boost_defines.h>
 
 //----- Forward declarations ---------------------------------------------------
@@ -24,7 +25,7 @@ class ObserverT;
 ////////////////////////////////////////////////////////////////////////////////
 /// \class Observer
 /// \brief Class used with the observer pattern.
-class Observer
+class XMSCORE_EXPORT Observer
 {
   friend ObserverT; ///< testing class
 public:
@@ -46,7 +47,7 @@ private:
   virtual void TimeRemainingInSeconds(double a_remainingSeconds);
   virtual void TimeElapsedInSeconds(double a_elapsedSeconds);
 
-  class impl;
+  class XMSCORE_EXPORT impl;
   BSHP<impl> m_p; ///< implementation class
 };                // class Observer
 

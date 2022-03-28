@@ -18,6 +18,7 @@
 #include <boost/scoped_ptr.hpp>
 
 // 5. Shared Headers
+#include <xmscore/xmscore_export.h>
 #include <xmscore/misc/Singleton.h>
 
 // 6. Non-shared Headers
@@ -50,7 +51,7 @@ namespace xms
 //------------------------------------------------------------------------------
 /// \brief Global string that instances of XM_LOG will copy from
 //------------------------------------------------------------------------------
-extern std::string g_xmUtil;
+XMSCORE_EXPORT extern std::string g_xmUtil;
 }
 #else // NOT WIN
 #define XM_LOG(A, B) ::xms::XmLog::Instance().Log(__FILE__, __LINE__, A, B);
@@ -109,7 +110,7 @@ typedef std::vector<std::pair<xmlog::MessageTypeEnum, std::string>> MessageStack
 /// \class XmLog
 /// \brief Class for logging messages
 ////////////////////////////////////////////////////////////////////////////////
-class XmLog : public xms::Singleton<XmLog>
+class XMSCORE_EXPORT XmLog : public xms::Singleton<XmLog>
 {
   /// Allow Singleton access to private members
   friend Singleton<XmLog>;
@@ -129,7 +130,7 @@ public:
 private:
   /// Constructor hidden and not implemented
   XmLog();
-  struct Impl;
+  struct XMSCORE_EXPORT Impl;
   /// Implementation pointer
   boost::scoped_ptr<Impl> m;
 }; // class XmLog
